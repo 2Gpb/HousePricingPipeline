@@ -1,3 +1,4 @@
+import pandas as pd
 from catboost import CatBoostRegressor
 from lightgbm import LGBMRegressor
 from omegaconf import DictConfig
@@ -41,5 +42,17 @@ def create_model(config: DictConfig, overrides: dict | None = None) -> BaseEstim
         params.setdefault("allow_writing_files", False)
     if name == "lightgbm":
         params.setdefault("verbose", -1)
+    if name == "xgboost":
+        params.setdefault("enable_categorical", True)
+        params.setdefault("tree_method", "hist")
 
     return CONSTRUCTORS[name](**params)
+
+
+def fit_model(model: BaseEstimator, X: pd.DataFrame, y: pd.Series) -> BaseEstimator:
+    """Fit the model; CatBoost also needs the list of categorical columns."""
+    if isinstance(model, CatBoostRegressor):
+        cat_features = X.select_dtypes(exclude="number").columns.tolist()
+        X[cat_features] = X[cat_features].astype(str).astype(object)
+        return model.fit(X, y, cat_features=cat_features)
+    return model.fit(X, y)

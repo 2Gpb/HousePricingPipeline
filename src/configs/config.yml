@@ -1,5 +1,5 @@
 general:
-  experiment_name: baseline_v1
+  experiment_name: linreg_full_prep
   seed: 42
   debug: False
 data:
@@ -10,12 +10,59 @@ data:
   log_file: log.csv
   id_column: Id
   target_column: SalePrice
-  drop_ids:
-    - 524
-    - 1299
 validation:
   n_splits: 5
   shuffle: True
+preprocessing:
+  log_transform: True
+  encoding: ohe
+  scale: True
+  drop_ids:
+    - 524
+    - 1299
+  drop_columns:
+    - GarageArea
+    - GarageYrBlt
+    - TotRmsAbvGrd
+    - 1stFlrSF
+    - Utilities
+    - Street
+    - PoolArea
+    - PoolQC
+  as_category:
+    - MSSubClass
+  log_columns:
+    - LotArea
+  house_parts:
+    - Bsmt
+    - Garage
+    - Fireplace
+    - Alley
+    - Fence
+    - MiscFeature
+  ordinal_columns:
+    - ExterQual
+    - ExterCond
+    - BsmtQual
+    - BsmtCond
+    - HeatingQC
+    - KitchenQual
+    - FireplaceQu
+    - GarageQual
+    - GarageCond
+  mode_fill_columns:
+    - BsmtFullBath
+    - BsmtHalfBath
+    - FullBath
+    - HalfBath
+    - BedroomAbvGr
+    - KitchenAbvGr
+    - Fireplaces
+    - GarageCars
+  unknown_fill_columns:
+  - Exterior1st
+  - Exterior2nd
+  - SaleType
 model:
   name: linear_regression
 model_params:

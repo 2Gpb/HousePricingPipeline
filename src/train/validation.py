@@ -5,6 +5,7 @@ from sklearn.base import BaseEstimator, clone
 from sklearn.model_selection import KFold
 
 from data.dataset import preprocess_data
+from models.classic import fit_model
 from utils.metrics import rmse
 
 
@@ -35,7 +36,7 @@ def run_cv(
         X_train, X_val, fold_test = preprocess_data(X_train, X_val, X_test, config)
 
         fold_model = clone(model)
-        fold_model.fit(X_train, y_train)
+        fit_model(fold_model, X_train, y_train)
 
         train_pred = fold_model.predict(X_train)
         val_pred = fold_model.predict(X_val)
