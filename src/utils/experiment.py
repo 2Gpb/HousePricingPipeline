@@ -60,7 +60,7 @@ def log_experiment(metrics: dict, config: DictConfig) -> None:
 
 
 def _get_git_info() -> dict:
-    """Return the current commit hash and whether tracked files have uncommitted changes."""
+    """Return the commit hash and whether code (not config.yml) has uncommitted changes."""
 
     def git(*args: str) -> str:
         return subprocess.run(
@@ -73,5 +73,14 @@ def _get_git_info() -> dict:
 
     return {
         "git_hash": git("rev-parse", "--short", "HEAD"),
-        "git_dirty": bool(git("status", "--porcelain", "--untracked-files=no")),
+        "git_dirty": bool(
+            git(
+                "status",
+                "--porcelain",
+                "--untracked-files=no",
+                "--",
+                ".",
+                ":(exclude)src/configs/config.yml",
+            )
+        ),
     }
