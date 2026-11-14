@@ -1,5 +1,5 @@
 general:
-  experiment_name: knn_full_prep
+  experiment_name: cat_boost_full_prep
   seed: 42
   debug: False
 data:
@@ -14,7 +14,7 @@ validation:
   n_splits: 5
   shuffle: True
 model:
-  name: knn
+  name: cat_boost
 model_params:
   linear_regression: {}
   ridge:

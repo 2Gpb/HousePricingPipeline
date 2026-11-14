@@ -60,7 +60,7 @@ def log_experiment(metrics: dict, config: DictConfig) -> None:
 
 
 def _get_git_info() -> dict:
-    """Return the commit hash and whether code (not config.yml) has uncommitted changes."""
+    """Return the commit hash and whether pipeline code has uncommitted changes."""
 
     def git(*args: str) -> str:
         return subprocess.run(
@@ -81,6 +81,7 @@ def _get_git_info() -> dict:
                 "--",
                 ".",
                 ":(exclude)src/configs/config.yml",
+                ":(exclude)notebooks",
             )
         ),
     }
