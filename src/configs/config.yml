@@ -1,5 +1,5 @@
 general:
-  experiment_name: lasso_full_prep
+  experiment_name: elastic_net_full_prep
   seed: 42
   debug: False
 data:
@@ -64,7 +64,7 @@ preprocessing:
   - Exterior2nd
   - SaleType
 model:
-  name: lasso
+  name: elastic_net
 model_params:
   linear_regression: {}
   ridge:
