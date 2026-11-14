@@ -98,7 +98,6 @@ def preprocess_data(
         X_test = pd.concat([X_test.drop(columns=cat_cols), encoded_test], axis=1)
     elif config.preprocessing.encoding == "native":
         for column in cat_cols:
-            # Vocabulary comes from the train fold only; anything else becomes "missing".
             train_categories = list(X_train[column].unique())
             dtype = pd.CategoricalDtype(categories=[*train_categories, "missing"])
             for frame in (X_train, X_val, X_test):
