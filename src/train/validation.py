@@ -15,6 +15,7 @@ def run_cv(
     y: pd.Series,
     X_test: pd.DataFrame,
     config: DictConfig,
+    preprocess: bool = True,
 ) -> dict:
     """K-fold CV: fold scores, OOF and averaged test predictions."""
     cv = KFold(
@@ -29,7 +30,9 @@ def run_cv(
         X_train, y_train = X.iloc[train_idx], y.iloc[train_idx]
         X_val, y_val = X.iloc[val_idx], y.iloc[val_idx]
 
-        X_train, X_val, fold_test = preprocess_data(X_train, X_val, X_test, config)
+        fold_test = X_test
+        if preprocess:
+            X_train, X_val, fold_test = preprocess_data(X_train, X_val, X_test, config)
 
         fold_model = clone(model)
         fit_model(fold_model, X_train, y_train)

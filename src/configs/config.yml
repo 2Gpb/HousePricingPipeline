@@ -1,5 +1,5 @@
 general:
-  experiment_name: cat_boost_new_features
+  experiment_name: mean_lasso_cat_mlp
   seed: 42
   debug: False
 data:
@@ -14,7 +14,7 @@ validation:
   n_splits: 5
   shuffle: True
 model:
-  name: cat_boost
+  name: mean
 model_params:
   linear_regression: {}
   ridge:
@@ -70,10 +70,25 @@ model_params:
     batch_norm: false
     device: cpu
     plot_loss: false
+  mean:
+    experiments:
+      - lasso_full_prep
+      - cat_boost_new_features
+      - mlp_ohe_min_freq
+  blend:
+    experiments:
+      - lasso_full_prep
+      - cat_boost_new_features
+      - mlp_ohe_min_freq
+  stack:
+    experiments: 
+      - lasso_full_prep
+      - cat_boost_new_features
+      - mlp_ohe_min_freq
 preprocessing:
-  log_transform: True
+  log_transform: False
   encoding: ohe
-  scale: True
+  scale: False
   ohe_min_frequency: null
   new_features: 
     - TotalSF

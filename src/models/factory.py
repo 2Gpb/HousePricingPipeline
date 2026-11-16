@@ -9,6 +9,8 @@ from sklearn.linear_model import ElasticNet, Lasso, LinearRegression, Ridge
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 
+from models.ensembles import BlendEnsemble, MeanEnsemble, StackEnsemble
+
 CONSTRUCTORS = {
     "linear_regression": LinearRegression,
     "ridge": Ridge,
@@ -30,13 +32,19 @@ NETWORKS = {
     "mlp": "MLP",
 }
 
+ENSEMBLES = {
+    "mean": MeanEnsemble,
+    "blend": BlendEnsemble,
+    "stack": StackEnsemble,
+}
+
 NO_RANDOM_STATE = {"linear_regression", "knn"}
 
 
 def create_model(config: DictConfig, overrides: dict | None = None) -> BaseEstimator:
     """Regressor from config."""
     name = config.model.name
-    known = [*CONSTRUCTORS, *LAZY_CONSTRUCTORS, *NETWORKS]
+    known = [*CONSTRUCTORS, *LAZY_CONSTRUCTORS, *NETWORKS, *ENSEMBLES]
     if name not in known:
         raise ValueError(f"Unknown model: {name}. Choose from {known}")
 
@@ -44,7 +52,7 @@ def create_model(config: DictConfig, overrides: dict | None = None) -> BaseEstim
     if overrides:
         params.update(overrides)
 
-    if name not in NO_RANDOM_STATE:
+    if name not in NO_RANDOM_STATE and name not in ENSEMBLES:
         params.setdefault("random_state", config.general.seed)
     if name == "cat_boost":
         params.setdefault("verbose", False)
@@ -67,6 +75,10 @@ def create_model(config: DictConfig, overrides: dict | None = None) -> BaseEstim
         constructor = getattr(importlib.import_module(module_name), class_name)
         return constructor(**params)
 
+    if name in ENSEMBLES:
+        params.pop("experiments")
+        return ENSEMBLES[name](**params)
+
     return CONSTRUCTORS[name](**params)
 
 
@@ -77,3 +89,8 @@ def fit_model(model: BaseEstimator, X: pd.DataFrame, y: pd.Series) -> BaseEstima
         X[cat_features] = X[cat_features].astype(str).astype(object)
         return model.fit(X, y, cat_features=cat_features)
     return model.fit(X, y)
+
+
+def is_ensemble(config: DictConfig) -> bool:
+    """Whether the configured model is an ensemble."""
+    return config.model.name in ENSEMBLES

@@ -3,7 +3,8 @@ from omegaconf import DictConfig
 
 from configs.config import config
 from data.dataset import load_data, prepare_data
-from models.factory import create_model
+from data.predictions import load_predictions
+from models.factory import create_model, is_ensemble
 from train.validation import run_cv
 from utils.log_experiment import check_experiment_is_new, log_experiment, save_artifacts
 from utils.submission import save_test_submission
@@ -17,8 +18,11 @@ def run(config: DictConfig) -> None:
     train, test = load_data(config)
     X, y, X_test, test_ids = prepare_data(train, test, config)
 
+    if is_ensemble(config):
+        X, X_test = load_predictions(config)
+
     model = create_model(config)
-    result = run_cv(model, X, y, X_test, config)
+    result = run_cv(model, X, y, X_test, config, not is_ensemble(config))
 
     train_mean = np.mean(result["train_scores"])
     val_mean = np.mean(result["val_scores"])
