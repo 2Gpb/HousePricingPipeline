@@ -9,7 +9,7 @@ from sklearn.linear_model import ElasticNet, Lasso, LinearRegression, Ridge
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 
-from models.ensembles import BlendEnsemble, MeanEnsemble, StackEnsemble
+from models.ensembles import BlendEnsemble, MeanEnsemble
 
 CONSTRUCTORS = {
     "linear_regression": LinearRegression,
@@ -35,7 +35,7 @@ NETWORKS = {
 ENSEMBLES = {
     "mean": MeanEnsemble,
     "blend": BlendEnsemble,
-    "stack": StackEnsemble,
+    "stack": Ridge,
 }
 
 NO_RANDOM_STATE = {"linear_regression", "knn"}

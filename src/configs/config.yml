@@ -1,5 +1,5 @@
 general:
-  experiment_name: blend_lasso_cat_mlp
+  experiment_name: stack_lasso_cat_mlp
   seed: 42
   debug: False
 data:
@@ -14,7 +14,7 @@ validation:
   n_splits: 5
   shuffle: True
 model:
-  name: blend
+  name: stack
 model_params:
   linear_regression: {}
   ridge:
@@ -81,6 +81,7 @@ model_params:
       - cat_boost_new_features
       - mlp_ohe_min_freq
   stack:
+    positive: true
     experiments: 
       - lasso_full_prep
       - cat_boost_new_features

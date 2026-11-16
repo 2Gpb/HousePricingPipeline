@@ -40,13 +40,8 @@ class BlendEnsemble(RegressorMixin, BaseEstimator):
         )
 
         self.weights_ = result.x
-        print(f"Found weights: {self.weights_}")
         return self
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         """Weighted sum of base predictions."""
         return (X @ self.weights_).to_numpy()
-
-
-class StackEnsemble:
-    pass
