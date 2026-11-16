@@ -1,5 +1,5 @@
 general:
-  experiment_name: lasso_ohe_min_freq
+  experiment_name: cat_boost_new_features
   seed: 42
   debug: False
 data:
@@ -14,7 +14,7 @@ validation:
   n_splits: 5
   shuffle: True
 model:
-  name: lasso
+  name: cat_boost
 model_params:
   linear_regression: {}
   ridge:
@@ -74,7 +74,11 @@ preprocessing:
   log_transform: True
   encoding: ohe
   scale: True
-  ohe_min_frequency: 10
+  ohe_min_frequency: null
+  new_features: 
+    - TotalSF
+    - TotalBath
+    - HouseAge
   drop_ids:
     - 524
     - 1299

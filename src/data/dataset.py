@@ -6,6 +6,16 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from configs.config import PROJECT_ROOT
 
 ORDINAL_MAP = {"None": 0, "Po": 1, "Fa": 2, "TA": 3, "Gd": 4, "Ex": 5}
+NEW_FEATURES = {
+    "TotalSF": lambda X: X["TotalBsmtSF"] + X["GrLivArea"],
+    "TotalBath": lambda X: (
+        X["FullBath"]
+        + 0.5 * X["HalfBath"]
+        + X["BsmtFullBath"]
+        + 0.5 * X["BsmtHalfBath"]
+    ),
+    "HouseAge": lambda X: X["YrSold"] - X["YearBuilt"],
+}
 
 
 def load_data(config: DictConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -88,7 +98,7 @@ def preprocess_data(
         ohe = OneHotEncoder(
             handle_unknown="infrequent_if_exist",
             sparse_output=False,
-            min_frequency=config.preprocessing.ohe_min_frequency
+            min_frequency=config.preprocessing.ohe_min_frequency,
         ).set_output(transform="pandas")
         encoded_train = ohe.fit_transform(X_train[cat_cols])
         encoded_val = ohe.transform(X_val[cat_cols])
@@ -134,6 +144,9 @@ def _clean(X: pd.DataFrame, config: DictConfig) -> pd.DataFrame:
     X_to_clean[list(config.preprocessing.unknown_fill_columns)] = X_to_clean[
         list(config.preprocessing.unknown_fill_columns)
     ].fillna("Unknown")
+
+    for feature in config.preprocessing.new_features:
+        X_to_clean[feature] = NEW_FEATURES[feature](X_to_clean)
 
     for col in config.preprocessing.ordinal_columns:
         X_to_clean[col] = X_to_clean[col].map(ORDINAL_MAP)
