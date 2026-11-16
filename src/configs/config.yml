@@ -1,5 +1,5 @@
 general:
-  experiment_name: mean_lasso_cat_mlp
+  experiment_name: blend_lasso_cat_mlp
   seed: 42
   debug: False
 data:
@@ -14,7 +14,7 @@ validation:
   n_splits: 5
   shuffle: True
 model:
-  name: mean
+  name: blend
 model_params:
   linear_regression: {}
   ridge:
