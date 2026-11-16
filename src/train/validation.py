@@ -5,7 +5,7 @@ from sklearn.base import BaseEstimator, clone
 from sklearn.model_selection import KFold
 
 from data.dataset import preprocess_data
-from models.classic import fit_model
+from models.factory import fit_model
 from utils.metrics import rmse
 
 
@@ -16,11 +16,7 @@ def run_cv(
     X_test: pd.DataFrame,
     config: DictConfig,
 ) -> dict:
-    """Run K-fold CV.
-
-    Returns per-fold train/val RMSE, out-of-fold predictions
-    and test predictions averaged over folds (all in log space).
-    """
+    """K-fold CV: fold scores, OOF and averaged test predictions."""
     cv = KFold(
         n_splits=config.validation.n_splits,
         shuffle=config.validation.shuffle,

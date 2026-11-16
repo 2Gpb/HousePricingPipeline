@@ -14,7 +14,7 @@ from configs.config import (
 
 
 def check_experiment_is_new(config: DictConfig) -> None:
-    """Fail before training if this experiment name was already used."""
+    """Fail if the experiment name is already used."""
     existing = [
         path
         for path in (get_experiment_dir(config), get_submission_path(config))
@@ -29,7 +29,7 @@ def check_experiment_is_new(config: DictConfig) -> None:
 
 
 def save_artifacts(result: dict, config: DictConfig) -> None:
-    """Save the config snapshot, OOF and test predictions (log space)."""
+    """Save config, OOF and test predictions."""
     directory = get_experiment_dir(config)
     directory.mkdir(parents=True, exist_ok=True)
 
@@ -38,8 +38,8 @@ def save_artifacts(result: dict, config: DictConfig) -> None:
     np.save(directory / "test_pred.npy", result["test_pred"])
 
 
-def log_experiment(metrics: dict, config: DictConfig) -> None:
-    """Append one row with metrics and git state to the experiment log."""
+def log_experiment(metrics: dict[str, float], config: DictConfig) -> None:
+    """Append a row to the experiment log."""
     row = pd.DataFrame(
         [
             {
@@ -59,8 +59,8 @@ def log_experiment(metrics: dict, config: DictConfig) -> None:
     row.to_csv(path, mode="a", header=not path.exists(), index=False)
 
 
-def _get_git_info() -> dict:
-    """Return the commit hash and whether pipeline code has uncommitted changes."""
+def _get_git_info() -> dict[str, str | bool]:
+    """Commit hash and dirty flag."""
 
     def git(*args: str) -> str:
         return subprocess.run(

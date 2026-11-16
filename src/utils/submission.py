@@ -10,7 +10,7 @@ from configs.config import get_submission_path
 def save_test_submission(
     test_pred: np.ndarray, test_ids: pd.Series, config: DictConfig
 ) -> Path:
-    """Save predictions in Kaggle format. test_pred must be in dollars, not log."""
+    """Save submission with prices in dollars."""
     submission = pd.DataFrame(
         {
             config.data.id_column: test_ids,

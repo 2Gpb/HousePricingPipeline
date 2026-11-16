@@ -9,7 +9,7 @@ ORDINAL_MAP = {"None": 0, "Po": 1, "Fa": 2, "TA": 3, "Gd": 4, "Ex": 5}
 
 
 def load_data(config: DictConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Load raw train and test CSVs, keeping "None" as a real category."""
+    """Load raw train and test."""
     train = pd.read_csv(
         PROJECT_ROOT / config.data.train_path,
         keep_default_na=False,
@@ -26,7 +26,7 @@ def load_data(config: DictConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
 def prepare_data(
     train: pd.DataFrame, test: pd.DataFrame, config: DictConfig
 ) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
-    """Drop outliers and split into features, log target, test features and test ids."""
+    """Drop outliers, clean, split features and log target."""
     train = train[
         ~train[config.data.id_column].isin(config.preprocessing.drop_ids)
     ].reset_index(drop=True)
@@ -54,7 +54,7 @@ def prepare_data(
 def preprocess_data(
     X_train: pd.DataFrame, X_val: pd.DataFrame, X_test: pd.DataFrame, config: DictConfig
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Fit preprocessing on the train fold and apply it to all three sets."""
+    """Fit on the train fold, apply to all sets."""
     X_train = X_train.copy()
     X_val = X_val.copy()
     X_test = X_test.copy()
@@ -114,7 +114,7 @@ def preprocess_data(
 
 
 def _clean(X: pd.DataFrame, config: DictConfig) -> pd.DataFrame:
-    """Rule-based cleaning without statistics: codes to str, missing parts, ordinals."""
+    """Rule-based cleaning without statistics."""
     X_to_clean = X.copy()
     cols_as_category = list(config.preprocessing.as_category)
     X_to_clean[cols_as_category] = X_to_clean[cols_as_category].astype(str)

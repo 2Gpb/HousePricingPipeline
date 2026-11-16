@@ -9,7 +9,7 @@ config = OmegaConf.load(config_path)
 
 
 def get_submission_path(config: DictConfig) -> Path:
-    """Submission file of the current experiment."""
+    """Submission file path."""
     return (
         PROJECT_ROOT
         / config.data.submission_folder
@@ -18,12 +18,12 @@ def get_submission_path(config: DictConfig) -> Path:
 
 
 def get_experiment_dir(config: DictConfig) -> Path:
-    """Folder with artifacts of the current experiment."""
+    """Experiment artifacts folder."""
     return (
         PROJECT_ROOT / config.data.experiments_folder / config.general.experiment_name
     )
 
 
 def get_log_path(config: DictConfig) -> Path:
-    """Shared CSV log of all experiments."""
+    """Experiment log path."""
     return PROJECT_ROOT / config.data.experiments_folder / config.data.log_file

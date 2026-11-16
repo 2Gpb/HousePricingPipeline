@@ -1,5 +1,5 @@
 general:
-  experiment_name: cat_boost_full_prep
+  experiment_name: mlp_full_prep
   seed: 42
   debug: False
 data:
@@ -14,7 +14,7 @@ validation:
   n_splits: 5
   shuffle: True
 model:
-  name: cat_boost
+  name: mlp
 model_params:
   linear_regression: {}
   ridge:
@@ -56,6 +56,20 @@ model_params:
     min_child_weight: 2
     subsample: 0.8
     colsample_bytree: 0.5
+  mlp:
+    hidden_size: 64
+    n_layers: 2
+    activation: gelu
+    dropout: 0.3
+    loss: mse
+    optimizer: adamw
+    lr: 0.001
+    weight_decay: 0.05
+    epochs: 20
+    batch_size: 64
+    batch_norm: false
+    device: cpu
+    plot_loss: false
 preprocessing:
   log_transform: True
   encoding: ohe
