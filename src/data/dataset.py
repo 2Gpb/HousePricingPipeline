@@ -86,8 +86,9 @@ def preprocess_data(
 
     if config.preprocessing.encoding == "ohe":
         ohe = OneHotEncoder(
-            handle_unknown="ignore",
+            handle_unknown="infrequent_if_exist",
             sparse_output=False,
+            min_frequency=config.preprocessing.ohe_min_frequency
         ).set_output(transform="pandas")
         encoded_train = ohe.fit_transform(X_train[cat_cols])
         encoded_val = ohe.transform(X_val[cat_cols])
