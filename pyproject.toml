@@ -1,7 +1,7 @@
 [project]
 name = "housepricing"
 version = "0.1.0"
-description = "Add your description here"
+description = "House pricing"
 readme = "README.md"
 authors = [
     { name = "Tyukhmenev Petr", email = "Pvtyukhmenev@gmail.com" }
@@ -13,9 +13,9 @@ dependencies = [
     "matplotlib>=3.11.2",
     "numpy>=2.4.6",
     "omegaconf>=2.4.0",
-    "optuna>=5.0.0",
     "pandas>=3.1.1",
     "scikit-learn>=1.9.1",
+    "scipy>=1.17.1",
     "torch>=2.15.0",
     "xgboost>=3.2.0",
 ]
